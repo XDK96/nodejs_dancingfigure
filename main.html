@@ -1,0 +1,87 @@
+<html>
+<head>
+<style>
+td {
+ border-radius: 100%;
+ height: 7.5px;
+ width: 6px;
+}
+
+.center {
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+<script type="text/javascript">
+
+		function tableCreate() {
+		  const body = document.body,
+				tbl = document.createElement('table');
+		  tbl.style = 'center';
+		  //tbl.style.border = '1px solid black';
+			tbl.style.backgroundColor= '#28282a';
+			tbl.setAttribute("class", "center");
+		  for (let i = 0; i < 64; i++) {
+			const tr = tbl.insertRow();
+			for (let j = 0; j < 64; j++) {
+				const td = tr.insertCell();
+				//td.style.border = '1px solid black';
+				//td.style.border-radius= "100%";
+				//td.style.width='4px';
+				//td.style.height='7.5px';
+				let idx=i*64+j;
+				td.setAttribute("id", idx);
+			}
+		  }
+		  body.appendChild(tbl);
+		}
+
+	
+
+
+
+        var ws;
+		
+        window.onload = function () {
+
+			tableCreate();
+            ws = new WebSocket('ws://'+'localhost:8080');
+
+			ws.addEventListener('open', function(e) {
+				ws.send('Hi world!');
+				ws.addEventListener('message', function(e) {
+					let x=JSON.parse(e.data);
+					for (let i=0; i<64; i++)
+					{
+						for (let j=0; j<64; j++)
+						{
+							let idx=i*64+j;
+							let ridx=64*64-1-idx;
+							//console.log(ridx, idx);
+							if (x[ridx]==='0')
+							{
+							//document.getElementById(idx).style.backgroundColor='#ffffff';
+							document.getElementById(idx).style.backgroundColor='#545655';
+							}
+							else if(x[ridx]==='1')
+							{
+							//document.getElementById(idx).style.backgroundColor='#888888';
+							document.getElementById(idx).style.backgroundColor='#f40000';
+							}
+							else if(x[ridx]==='2')
+							{
+							//document.getElementById(idx).style.backgroundColor='#000000'
+							document.getElementById(idx).style.backgroundColor='#ca0d0b';
+							}
+							
+						}
+					}
+				});
+			});
+        };       
+    </script>
+</head>
+<body>
+<!--<h1>Hi!</hi>-->
+</body>
+</html>
